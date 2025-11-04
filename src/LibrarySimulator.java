@@ -1,4 +1,7 @@
 /*
+ * Github Repository:
+ * https://github.com/iD7m1/Library-Simulation-Project
+ * 
  * Abdulrahman Alamer
  * 445102743
  */
@@ -51,10 +54,10 @@ public class LibrarySimulator {
 
         while (true) {
             clearScreen();
-            drawBox("Main Menu", new String[]{
-                "1) Select a user account",
-                "2) Login as Administrator",
-                "3) Exit program"
+            drawBox("Main Menu", new String[] {
+                    "1) Select a user account",
+                    "2) Login as Administrator",
+                    "3) Exit program"
             }, CYAN);
             System.out.print(BOLD + YELLOW + "Enter choice (1-3): " + RESET);
 
@@ -80,11 +83,11 @@ public class LibrarySimulator {
     static void handleAccountSelection(Scanner input) {
         while (true) {
             clearScreen();
-            drawBox("Account Selection Menu", new String[]{
-                String.format("1) %d - %s", member1.getId(), member1.getName()),
-                String.format("2) %d - %s", member2.getId(), member2.getName()),
-                String.format("3) %d - %s", member3.getId(), member3.getName()),
-                "4) Back to main menu"
+            drawBox("Account Selection Menu", new String[] {
+                    String.format("1) %d - %s", member1.getId(), member1.getName()),
+                    String.format("2) %d - %s", member2.getId(), member2.getName()),
+                    String.format("3) %d - %s", member3.getId(), member3.getName()),
+                    "4) Back to main menu"
             }, BLUE);
             System.out.print(BOLD + YELLOW + "Enter choice (1-4): " + RESET);
 
@@ -129,18 +132,19 @@ public class LibrarySimulator {
         }
 
         clearScreen();
-        displayUserWelcome(userName, (accountIndex == 1 ? member1.getId() : (accountIndex == 2 ? member2.getId() : member3.getId())));
+        displayUserWelcome(userName,
+                (accountIndex == 1 ? member1.getId() : (accountIndex == 2 ? member2.getId() : member3.getId())));
         pause(PAUSE_MS);
 
         // Session loop
         while (true) {
             clearScreen();
-            drawBox("User Operations Menu", new String[]{
-                "1) View Borrowed Books Count",
-                "2) Borrow Book",
-                "3) Return Book",
-                "4) View Session Summary",
-                "5) Exit to Account Selection Menu"
+            drawBox("User Operations Menu", new String[] {
+                    "1) View Borrowed Books Count",
+                    "2) Borrow Book",
+                    "3) Return Book",
+                    "4) View Session Summary",
+                    "5) Exit to Account Selection Menu"
             }, GREEN);
             System.out.print(BOLD + YELLOW + "Enter choice (1-5): " + RESET);
 
@@ -159,8 +163,9 @@ public class LibrarySimulator {
                     sessionFees += FEE_PER_BORROW;
                     totalRevenue += FEE_PER_BORROW;
                     totalBorrowOperations++;
-                    displaySuccess(String.format("Book borrowed successfully. Fee charged: $%.2f. You now have %d book(s).",
-                            FEE_PER_BORROW, currentBorrowed));
+                    displaySuccess(
+                            String.format("Book borrowed successfully. Fee charged: $%.2f. You now have %d book(s).",
+                                    FEE_PER_BORROW, currentBorrowed));
                     pause(PAUSE_MS);
                 }
             } else if (action.equals("3")) {
@@ -172,7 +177,8 @@ public class LibrarySimulator {
                     currentBorrowed--;
                     sessionReturnedCount++;
                     totalReturnOperations++;
-                    displaySuccess(String.format("Book returned successfully. You now have %d book(s).", currentBorrowed));
+                    displaySuccess(
+                            String.format("Book returned successfully. You now have %d book(s).", currentBorrowed));
                     pause(PAUSE_MS);
                 }
             } else if (action.equals("4")) {
@@ -186,11 +192,11 @@ public class LibrarySimulator {
 
                 // // Save the updated currentBorrowed back to the selected account
                 // if (accountIndex == 1) {
-                //     booksBorrowed1 = currentBorrowed;
+                // booksBorrowed1 = currentBorrowed;
                 // } else if (accountIndex == 2) {
-                //     booksBorrowed2 = currentBorrowed;
+                // booksBorrowed2 = currentBorrowed;
                 // } else {
-                //     booksBorrowed3 = currentBorrowed;
+                // booksBorrowed3 = currentBorrowed;
                 // }
 
                 displayInfo("Session ended. Returning to account selection menu.");
@@ -208,13 +214,13 @@ public class LibrarySimulator {
         clearScreen();
         displayAdminLogin();
         pause(PAUSE_MS);
-        
+
         while (true) {
             clearScreen();
-            drawBox("Administrator Menu", new String[]{
-                "1) View Total Revenue",
-                "2) Most Frequent Operation (borrow/return)",
-                "3) Exit to Main Menu"
+            drawBox("Administrator Menu", new String[] {
+                    "1) View Total Revenue",
+                    "2) Most Frequent Operation (borrow/return)",
+                    "3) Exit to Main Menu"
             }, RED);
             System.out.print(BOLD + YELLOW + "Enter choice (1-3): " + RESET);
 
@@ -279,7 +285,8 @@ public class LibrarySimulator {
                 System.out.flush();
             } catch (Exception ex) {
                 // last resort: print several newlines
-                for (int i = 0; i < 50; i++) System.out.println();
+                for (int i = 0; i < 50; i++)
+                    System.out.println();
             }
         }
     }
@@ -289,7 +296,8 @@ public class LibrarySimulator {
     static void drawBox(String title, String[] options, String color) {
         int maxWidth = title.length();
         for (String option : options) {
-            if (option.length() > maxWidth) maxWidth = option.length();
+            if (option.length() > maxWidth)
+                maxWidth = option.length();
         }
         maxWidth += 4;
 
@@ -297,18 +305,20 @@ public class LibrarySimulator {
         System.out.println(color + BOLD + TOP_LEFT + repeat(HORIZONTAL, maxWidth) + TOP_RIGHT + RESET);
         System.out.println(color + BOLD + VERTICAL + center(title, maxWidth) + VERTICAL + RESET);
         System.out.println(color + BOLD + TOP_LEFT + repeat(HORIZONTAL, maxWidth) + TOP_RIGHT + RESET);
-        
+
         for (String option : options) {
-            System.out.println(color + VERTICAL + RESET + " " + WHITE + option + repeat(" ", maxWidth - option.length() - 1) + color + VERTICAL + RESET);
+            System.out.println(color + VERTICAL + RESET + " " + WHITE + option
+                    + repeat(" ", maxWidth - option.length() - 1) + color + VERTICAL + RESET);
         }
-        
+
         System.out.println(color + BOLD + BOTTOM_LEFT + repeat(HORIZONTAL, maxWidth) + BOTTOM_RIGHT + RESET);
         System.out.println();
     }
 
     static String repeat(String str, int count) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < count; i++) sb.append(str);
+        for (int i = 0; i < count; i++)
+            sb.append(str);
         return sb.toString();
     }
 
@@ -321,7 +331,8 @@ public class LibrarySimulator {
         System.out.println();
         System.out.println(CYAN + BOLD + "╔════════════════════════════════════════════════╗" + RESET);
         System.out.println(CYAN + BOLD + "║                                                ║" + RESET);
-        System.out.println(CYAN + BOLD + "║   " + GREEN + "Welcome to the Library Simulator" + CYAN + "             ║" + RESET);
+        System.out.println(
+                CYAN + BOLD + "║   " + GREEN + "Welcome to the Library Simulator" + CYAN + "             ║" + RESET);
         System.out.println(CYAN + BOLD + "║                                                ║" + RESET);
         System.out.println(CYAN + BOLD + "╚════════════════════════════════════════════════╝" + RESET);
         System.out.println();
@@ -331,8 +342,10 @@ public class LibrarySimulator {
         System.out.println();
         System.out.println(CYAN + BOLD + "╔════════════════════════════════════════════════╗" + RESET);
         System.out.println(CYAN + BOLD + "║                                                ║" + RESET);
-        System.out.println(CYAN + BOLD + "║   " + YELLOW + "Thank you for using the Library!" + CYAN + "             ║" + RESET);
-        System.out.println(CYAN + BOLD + "║   " + WHITE + "Goodbye!" + CYAN + "                                     ║" + RESET);
+        System.out.println(
+                CYAN + BOLD + "║   " + YELLOW + "Thank you for using the Library!" + CYAN + "             ║" + RESET);
+        System.out.println(
+                CYAN + BOLD + "║   " + WHITE + "Goodbye!" + CYAN + "                                     ║" + RESET);
         System.out.println(CYAN + BOLD + "║                                                ║" + RESET);
         System.out.println(CYAN + BOLD + "╚════════════════════════════════════════════════╝" + RESET);
         System.out.println();
@@ -341,10 +354,13 @@ public class LibrarySimulator {
     static void displayUserWelcome(String userName, int accountId) {
         System.out.println();
         System.out.println(GREEN + BOLD + "╔════════════════════════════════════════════════╗" + RESET);
-        System.out.println(GREEN + BOLD + "║   " + WHITE + "User Login Successful" + GREEN + "                        ║" + RESET);
+        System.out.println(
+                GREEN + BOLD + "║   " + WHITE + "User Login Successful" + GREEN + "                        ║" + RESET);
         System.out.println(GREEN + BOLD + "║                                                ║" + RESET);
-        System.out.println(GREEN + BOLD + "║   " + CYAN + String.format("Hello, %s!", userName) + repeat(" ", 37 - userName.length()) + GREEN + "║" + RESET);
-        System.out.println(GREEN + BOLD + "║   " + WHITE + String.format("Account ID: %d", accountId) + repeat(" ", 31 - String.valueOf(accountId).length()) + GREEN + "  ║" + RESET);
+        System.out.println(GREEN + BOLD + "║   " + CYAN + String.format("Hello, %s!", userName)
+                + repeat(" ", 37 - userName.length()) + GREEN + "║" + RESET);
+        System.out.println(GREEN + BOLD + "║   " + WHITE + String.format("Account ID: %d", accountId)
+                + repeat(" ", 31 - String.valueOf(accountId).length()) + GREEN + "  ║" + RESET);
         System.out.println(GREEN + BOLD + "╚════════════════════════════════════════════════╝" + RESET);
         System.out.println();
     }
@@ -353,7 +369,8 @@ public class LibrarySimulator {
         System.out.println();
         System.out.println(RED + BOLD + "╔════════════════════════════════════════════════╗" + RESET);
         System.out.println(RED + BOLD + "║                                                ║" + RESET);
-        System.out.println(RED + BOLD + "║   " + YELLOW + "*** Administrator Login ***" + RED + "                  ║" + RESET);
+        System.out.println(
+                RED + BOLD + "║   " + YELLOW + "*** Administrator Login ***" + RED + "                  ║" + RESET);
         System.out.println(RED + BOLD + "║                                                ║" + RESET);
         System.out.println(RED + BOLD + "╚════════════════════════════════════════════════╝" + RESET);
         System.out.println();
@@ -362,11 +379,15 @@ public class LibrarySimulator {
     static void displaySessionSummary(int borrowed, int returned, double fees) {
         System.out.println();
         System.out.println(CYAN + BOLD + "╔════════════════════════════════════════════════╗" + RESET);
-        System.out.println(CYAN + BOLD + "║   " + WHITE + "Session Summary" + CYAN + "                              ║" + RESET);
+        System.out.println(
+                CYAN + BOLD + "║   " + WHITE + "Session Summary" + CYAN + "                              ║" + RESET);
         System.out.println(CYAN + BOLD + "╠════════════════════════════════════════════════╣" + RESET);
-        System.out.println(CYAN + BOLD + "║   " + GREEN + String.format("Books borrowed this session: %d", borrowed) + repeat(" ", 16 - String.valueOf(borrowed).length()) + CYAN + "║" + RESET);
-        System.out.println(CYAN + BOLD + "║   " + YELLOW + String.format("Books returned this session: %d", returned) + repeat(" ", 16 - String.valueOf(returned).length()) + CYAN + "║" + RESET);
-        System.out.println(CYAN + BOLD + "║   " + WHITE + String.format("Total fees this session: $%.2f", fees) + repeat(" ", 19 - String.format("%.2f", fees).length()) + CYAN + "║" + RESET);
+        System.out.println(CYAN + BOLD + "║   " + GREEN + String.format("Books borrowed this session: %d", borrowed)
+                + repeat(" ", 16 - String.valueOf(borrowed).length()) + CYAN + "║" + RESET);
+        System.out.println(CYAN + BOLD + "║   " + YELLOW + String.format("Books returned this session: %d", returned)
+                + repeat(" ", 16 - String.valueOf(returned).length()) + CYAN + "║" + RESET);
+        System.out.println(CYAN + BOLD + "║   " + WHITE + String.format("Total fees this session: $%.2f", fees)
+                + repeat(" ", 19 - String.format("%.2f", fees).length()) + CYAN + "║" + RESET);
         System.out.println(CYAN + BOLD + "╚════════════════════════════════════════════════╝" + RESET);
     }
 
