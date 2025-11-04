@@ -6,10 +6,17 @@ public class Member {
     private int numBorrows;
     private int numReturns;
     private double sessionFees;
-    public double TotalRevenue;
-    public int TotalViewBorrowed;
-    public int TotalBorrows;
-    public int TotalReturns;
+
+    static public double TotalRevenue = 0.0;
+    static public int TotalViewBorrowed = 0;
+    static public int TotalBorrows = 0;
+    static public int TotalReturns = 0;
+
+
+    // Constants
+    static final double FEE_PER_BORROW = 0.50;
+    static final int MAX_BORROW_PER_USER = 5;
+
 
     public Member(int id, String name, int borrowedCount) {
         this.id = id;
@@ -20,10 +27,6 @@ public class Member {
         this.numBorrows = 0;
         this.numReturns = 0;
         this.sessionFees = 0.0;
-        this.TotalRevenue = 0.0;
-        this.TotalViewBorrowed = 0;
-        this.TotalBorrows = 0;
-        this.TotalReturns = 0;
     }
 
     private boolean canBorrow() {
@@ -40,6 +43,10 @@ public class Member {
     public boolean borrowOne() {
         if (canBorrow()) {
             borrowedCount++;
+            sessionFees += FEE_PER_BORROW;
+            numBorrows++;
+            Member.TotalRevenue += FEE_PER_BORROW;
+            Member.TotalBorrows++;
             return true;
         }
         return false;
@@ -48,6 +55,8 @@ public class Member {
     public boolean returnOne() {
         if (canReturn()) {
             borrowedCount--;
+            numReturns++;
+            Member.TotalReturns++;
             return true;
         }
         return false;
@@ -57,6 +66,19 @@ public class Member {
     }
 
     public void reset() {
+    }
+
+    // Getters & Setters
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getBorrowedCount() {
+        return borrowedCount;
     }
 
 }

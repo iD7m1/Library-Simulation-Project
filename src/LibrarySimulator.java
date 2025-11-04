@@ -8,17 +8,9 @@ import java.util.Scanner;
 public class LibrarySimulator {
 
     // Predefined accounts
-    static int accountId1 = 445102743;
-    static String accountName1 = "Abdulrahman";
-    static int booksBorrowed1 = 0; // current borrowed books for account 1
-
-    static int accountId2 = 445102744;
-    static String accountName2 = "Abdulaziz";
-    static int booksBorrowed2 = 0; // current borrowed books for account 2
-
-    static int accountId3 = 445102745;
-    static String accountName3 = "Abdullah";
-    static int booksBorrowed3 = 0; // current borrowed books for account 3
+    static Member member1 = new Member(445102743, "Abdulrahman", 0);
+    static Member member2 = new Member(445102744, "Abdulaziz", 0);
+    static Member member3 = new Member(445102745, "Abdullah", 0);
 
     // Global statistics (persist across sessions)
     static double totalRevenue = 0.0; // accumulated fees from all borrow operations
@@ -89,9 +81,9 @@ public class LibrarySimulator {
         while (true) {
             clearScreen();
             drawBox("Account Selection Menu", new String[]{
-                String.format("1) %d - %s", accountId1, accountName1),
-                String.format("2) %d - %s", accountId2, accountName2),
-                String.format("3) %d - %s", accountId3, accountName3),
+                String.format("1) %d - %s", member1.getId(), member1.getName()),
+                String.format("2) %d - %s", member2.getId(), member2.getName()),
+                String.format("3) %d - %s", member3.getId(), member3.getName()),
                 "4) Back to main menu"
             }, BLUE);
             System.out.print(BOLD + YELLOW + "Enter choice (1-4): " + RESET);
@@ -126,18 +118,18 @@ public class LibrarySimulator {
 
         // Reference to the selected account's borrowed count via local alias
         if (accountIndex == 1) {
-            userName = accountName1;
-            currentBorrowed = booksBorrowed1;
+            userName = member1.getName();
+            currentBorrowed = member1.getBorrowedCount();
         } else if (accountIndex == 2) {
-            userName = accountName2;
-            currentBorrowed = booksBorrowed2;
+            userName = member2.getName();
+            currentBorrowed = member2.getBorrowedCount();
         } else {
-            userName = accountName3;
-            currentBorrowed = booksBorrowed3;
+            userName = member3.getName();
+            currentBorrowed = member3.getBorrowedCount();
         }
 
         clearScreen();
-        displayUserWelcome(userName, (accountIndex == 1 ? accountId1 : (accountIndex == 2 ? accountId2 : accountId3)));
+        displayUserWelcome(userName, (accountIndex == 1 ? member1.getId() : (accountIndex == 2 ? member2.getId() : member3.getId())));
         pause(PAUSE_MS);
 
         // Session loop
@@ -190,14 +182,16 @@ public class LibrarySimulator {
                 System.out.print(BOLD + YELLOW + "\nPress Enter to continue..." + RESET);
                 input.nextLine();
             } else if (action.equals("5")) {
-                // Save the updated currentBorrowed back to the selected account
-                if (accountIndex == 1) {
-                    booksBorrowed1 = currentBorrowed;
-                } else if (accountIndex == 2) {
-                    booksBorrowed2 = currentBorrowed;
-                } else {
-                    booksBorrowed3 = currentBorrowed;
-                }
+                // TODO
+
+                // // Save the updated currentBorrowed back to the selected account
+                // if (accountIndex == 1) {
+                //     booksBorrowed1 = currentBorrowed;
+                // } else if (accountIndex == 2) {
+                //     booksBorrowed2 = currentBorrowed;
+                // } else {
+                //     booksBorrowed3 = currentBorrowed;
+                // }
 
                 displayInfo("Session ended. Returning to account selection menu.");
                 pause(PAUSE_MS);
