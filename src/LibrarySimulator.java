@@ -11,14 +11,19 @@ import java.util.Scanner;
 public class LibrarySimulator {
 
     // Predefined accounts
-    static Member member1 = new Member(445102743, "Abdulrahman", 0);
-    static Member member2 = new Member(445102744, "Abdulaziz", 0);
-    static Member member3 = new Member(445102745, "Abdullah", 0);
+    static Member[] member = {
+            new Member(445102743, "Abdulrahman", 0),
+            new Member(445102744, "Abdulaziz", 0),
+            new Member(445102745, "Abdullah", 0)
+    };
 
     // Global statistics (persist across sessions)
-    static double totalRevenue = 0.0; // accumulated fees from all borrow operations
-    static int totalBorrowOperations = 0; // count of borrow operations across all users
-    static int totalReturnOperations = 0; // count of return operations across all users
+    // static double totalRevenue = 0.0; // accumulated fees from all borrow
+    // operations
+    // static int totalBorrowOperations = 0; // count of borrow operations across
+    // all users
+    // static int totalReturnOperations = 0; // count of return operations across
+    // all users
 
     // Constants
     static final double FEE_PER_BORROW = 0.50;
@@ -71,7 +76,7 @@ public class LibrarySimulator {
                 displayGoodbyeMessage();
                 break;
             } else {
-                displayError("Invalid choice. Please enter 1, 2 or 3.");
+                displayError("Invalid selection. Choose 1-3.");
                 pause(PAUSE_MS);
             }
         }
@@ -84,9 +89,10 @@ public class LibrarySimulator {
         while (true) {
             clearScreen();
             drawBox("Account Selection Menu", new String[] {
-                    String.format("1) %d - %s", member1.getId(), member1.getName()),
-                    String.format("2) %d - %s", member2.getId(), member2.getName()),
-                    String.format("3) %d - %s", member3.getId(), member3.getName()),
+                    // For all members in the member array print a line with their id and name
+                    String.format("1) %d - %s", member[0].getId(), member[0].getName()),
+                    String.format("2) %d - %s", member[1].getId(), member[1].getName()),
+                    String.format("3) %d - %s", member[2].getId(), member[2].getName()),
                     "4) Back to main menu"
             }, BLUE);
             System.out.print(BOLD + YELLOW + "Enter choice (1-4): " + RESET);
@@ -111,29 +117,14 @@ public class LibrarySimulator {
 
     // User session for a particular account (accountIndex 1..3)
     static void userSession(Scanner input, int accountIndex) {
+        accountIndex--; // Adjust for 0-based index
+
         // Reset session statistics
-        int sessionBorrowedCount = 0;
-        int sessionReturnedCount = 0;
-        double sessionFees = 0.0;
-
-        String userName;
-        int currentBorrowed;
-
-        // Reference to the selected account's borrowed count via local alias
-        if (accountIndex == 1) {
-            userName = member1.getName();
-            currentBorrowed = member1.getBorrowedCount();
-        } else if (accountIndex == 2) {
-            userName = member2.getName();
-            currentBorrowed = member2.getBorrowedCount();
-        } else {
-            userName = member3.getName();
-            currentBorrowed = member3.getBorrowedCount();
-        }
+        member[accountIndex].reset();
 
         clearScreen();
-        displayUserWelcome(userName,
-                (accountIndex == 1 ? member1.getId() : (accountIndex == 2 ? member2.getId() : member3.getId())));
+        displayUserWelcome(member[accountIndex].getName(), member[accountIndex].getId());
+
         pause(PAUSE_MS);
 
         // Session loop
@@ -150,60 +141,42 @@ public class LibrarySimulator {
 
             String action = input.nextLine().trim();
             if (action.equals("1")) {
-                displayInfo(String.format("You currently have %d book(s) borrowed.", currentBorrowed));
+                member[accountIndex].viewBorrowedCount();
                 pause(PAUSE_MS);
             } else if (action.equals("2")) {
                 // Borrow one book
-                if (currentBorrowed >= MAX_BORROW_PER_USER) {
-                    displayError("Cannot borrow more than " + MAX_BORROW_PER_USER + " books at once.");
-                    pause(PAUSE_MS);
-                } else {
-                    currentBorrowed++;
-                    sessionBorrowedCount++;
-                    sessionFees += FEE_PER_BORROW;
-                    totalRevenue += FEE_PER_BORROW;
-                    totalBorrowOperations++;
+                if (member[accountIndex].borrowOne()) {
                     displaySuccess(
                             String.format("Book borrowed successfully. Fee charged: $%.2f. You now have %d book(s).",
-                                    FEE_PER_BORROW, currentBorrowed));
+                                    FEE_PER_BORROW, member[accountIndex].getBorrowedCount()));
+                    pause(PAUSE_MS);
+                } else {
+                    displayError("Cannot borrow more than " + MAX_BORROW_PER_USER + " books at once.");
                     pause(PAUSE_MS);
                 }
             } else if (action.equals("3")) {
                 // Return one book
-                if (currentBorrowed <= 0) {
-                    displayError("You have no books to return.");
+                if (member[accountIndex].returnOne()) {
+                    displaySuccess(
+                            String.format("Book returned successfully. You now have %d book(s).",
+                                    member[accountIndex].getBorrowedCount()));
                     pause(PAUSE_MS);
                 } else {
-                    currentBorrowed--;
-                    sessionReturnedCount++;
-                    totalReturnOperations++;
-                    displaySuccess(
-                            String.format("Book returned successfully. You now have %d book(s).", currentBorrowed));
+                    displayError("You have no books to return.");
                     pause(PAUSE_MS);
                 }
             } else if (action.equals("4")) {
                 // Session summary
                 clearScreen();
-                displaySessionSummary(sessionBorrowedCount, sessionReturnedCount, sessionFees);
+                member[accountIndex].displayStatistics();
                 System.out.print(BOLD + YELLOW + "\nPress Enter to continue..." + RESET);
                 input.nextLine();
             } else if (action.equals("5")) {
-                // TODO
-
-                // // Save the updated currentBorrowed back to the selected account
-                // if (accountIndex == 1) {
-                // booksBorrowed1 = currentBorrowed;
-                // } else if (accountIndex == 2) {
-                // booksBorrowed2 = currentBorrowed;
-                // } else {
-                // booksBorrowed3 = currentBorrowed;
-                // }
-
                 displayInfo("Session ended. Returning to account selection menu.");
                 pause(PAUSE_MS);
                 break;
             } else {
-                displayError("Invalid option. Please enter a number between 1 and 5.");
+                displayError("Invalid selection. Choose 1-5.");
                 pause(PAUSE_MS);
             }
         }
@@ -220,35 +193,39 @@ public class LibrarySimulator {
             drawBox("Administrator Menu", new String[] {
                     "1) View Total Revenue",
                     "2) Most Frequent Operation (borrow/return)",
-                    "3) Exit to Main Menu"
+                    "3) Total Views of Borrowed Count",
+                    "4) Exit to Main Menu"
             }, RED);
-            System.out.print(BOLD + YELLOW + "Enter choice (1-3): " + RESET);
+            System.out.print(BOLD + YELLOW + "Enter choice (1-4): " + RESET);
 
             String adm = input.nextLine().trim();
             if (adm.equals("1")) {
-                displayInfo(String.format("Total revenue collected: $%.2f", totalRevenue));
+                displayInfo(String.format("Total revenue collected: $%.2f", Member.TotalRevenue));
                 pause(PAUSE_MS);
             } else if (adm.equals("2")) {
-                if (totalBorrowOperations == 0 && totalReturnOperations == 0) {
+                if (Member.TotalBorrows == 0 && Member.TotalReturns == 0) {
                     displayInfo("No operations have been performed yet.");
                     pause(PAUSE_MS);
-                } else if (totalBorrowOperations > totalReturnOperations) {
-                    displayInfo(String.format("Most frequent operation: borrow (%d times)", totalBorrowOperations));
+                } else if (Member.TotalBorrows > Member.TotalReturns) {
+                    displayInfo(String.format("Most frequent operation: borrow (%d times)", Member.TotalBorrows));
                     pause(PAUSE_MS);
-                } else if (totalReturnOperations > totalBorrowOperations) {
-                    displayInfo(String.format("Most frequent operation: return (%d times)", totalReturnOperations));
+                } else if (Member.TotalReturns > Member.TotalBorrows) {
+                    displayInfo(String.format("Most frequent operation: return (%d times)", Member.TotalReturns));
                     pause(PAUSE_MS);
                 } else {
                     displayInfo(String.format("Both operations are equally frequent: borrow (%d) and return (%d)",
-                            totalBorrowOperations, totalReturnOperations));
+                            Member.TotalBorrows, Member.TotalReturns));
                     pause(PAUSE_MS);
                 }
             } else if (adm.equals("3")) {
+                displayInfo(String.format("Total views of borrowed count: %d", Member.TotalViewBorrowed));
+                pause(PAUSE_MS);
+            } else if (adm.equals("4")) {
                 displayInfo("Exiting administrator menu.");
                 pause(PAUSE_MS);
                 break;
             } else {
-                displayError("Invalid choice. Please enter 1, 2 or 3.");
+                displayError("Invalid selection. Choose 1-4.");
                 pause(PAUSE_MS);
             }
         }
@@ -376,7 +353,7 @@ public class LibrarySimulator {
         System.out.println();
     }
 
-    static void displaySessionSummary(int borrowed, int returned, double fees) {
+    static void displaySessionSummary(int borrowed, int returned, double fees, int numViewBorrowed) {
         System.out.println();
         System.out.println(CYAN + BOLD + "╔════════════════════════════════════════════════╗" + RESET);
         System.out.println(
@@ -386,6 +363,9 @@ public class LibrarySimulator {
                 + repeat(" ", 16 - String.valueOf(borrowed).length()) + CYAN + "║" + RESET);
         System.out.println(CYAN + BOLD + "║   " + YELLOW + String.format("Books returned this session: %d", returned)
                 + repeat(" ", 16 - String.valueOf(returned).length()) + CYAN + "║" + RESET);
+        System.out.println(
+                CYAN + BOLD + "║   " + WHITE + String.format("Total view borrowed this session: %d", numViewBorrowed)
+                        + repeat(" ", 11 - String.valueOf(numViewBorrowed).length()) + CYAN + "║" + RESET);
         System.out.println(CYAN + BOLD + "║   " + WHITE + String.format("Total fees this session: $%.2f", fees)
                 + repeat(" ", 19 - String.format("%.2f", fees).length()) + CYAN + "║" + RESET);
         System.out.println(CYAN + BOLD + "╚════════════════════════════════════════════════╝" + RESET);

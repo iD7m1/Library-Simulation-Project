@@ -38,6 +38,10 @@ public class Member {
     }
 
     public void viewBorrowedCount() {
+        numViewBorrowed++;
+        Member.TotalViewBorrowed++;
+
+        LibrarySimulator.displayInfo(String.format("You currently have %d book(s) borrowed.", borrowedCount));
     }
 
     public boolean borrowOne() {
@@ -63,9 +67,14 @@ public class Member {
     }
 
     public void displayStatistics() {
+        LibrarySimulator.displaySessionSummary(numBorrows, numReturns, sessionFees, numViewBorrowed);
     }
 
     public void reset() {
+        this.numViewBorrowed = 0;
+        this.numBorrows = 0;
+        this.numReturns = 0;
+        this.sessionFees = 0.0;
     }
 
     // Getters & Setters
