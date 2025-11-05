@@ -10,20 +10,15 @@ import java.util.Scanner;
 
 public class LibrarySimulator {
 
+    // Input scanner
+    static Scanner input = new Scanner(System.in);
+
     // Predefined accounts
     static Member[] member = {
             new Member(445102743, "Abdulrahman", 0),
             new Member(445102744, "Abdulaziz", 0),
             new Member(445102745, "Abdullah", 0)
     };
-
-    // Global statistics (persist across sessions)
-    // static double totalRevenue = 0.0; // accumulated fees from all borrow
-    // operations
-    // static int totalBorrowOperations = 0; // count of borrow operations across
-    // all users
-    // static int totalReturnOperations = 0; // count of return operations across
-    // all users
 
     // Constants
     static final double FEE_PER_BORROW = 0.50;
@@ -51,7 +46,6 @@ public class LibrarySimulator {
     static final String VERTICAL = "║";
 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
 
         clearScreen();
         displayWelcomeBanner();
@@ -68,9 +62,9 @@ public class LibrarySimulator {
 
             String choice = input.nextLine().trim();
             if (choice.equals("1")) {
-                handleAccountSelection(input);
+                handleAccountSelection();
             } else if (choice.equals("2")) {
-                handleAdministratorMenu(input);
+                handleAdministratorMenu();
             } else if (choice.equals("3")) {
                 clearScreen();
                 displayGoodbyeMessage();
@@ -85,7 +79,7 @@ public class LibrarySimulator {
     }
 
     // Show account list and let user pick one
-    static void handleAccountSelection(Scanner input) {
+    static void handleAccountSelection() {
         while (true) {
             clearScreen();
             drawBox("Account Selection Menu", new String[] {
@@ -99,11 +93,11 @@ public class LibrarySimulator {
 
             String sel = input.nextLine().trim();
             if (sel.equals("1")) {
-                userSession(input, 1);
+                userSession(1);
             } else if (sel.equals("2")) {
-                userSession(input, 2);
+                userSession(2);
             } else if (sel.equals("3")) {
-                userSession(input, 3);
+                userSession(3);
             } else if (sel.equals("4")) {
                 displayInfo("Returning to main menu.");
                 pause(PAUSE_MS);
@@ -116,7 +110,7 @@ public class LibrarySimulator {
     }
 
     // User session for a particular account (accountIndex 1..3)
-    static void userSession(Scanner input, int accountIndex) {
+    static void userSession(int accountIndex) {
         accountIndex--; // Adjust for 0-based index
 
         // Reset session statistics
@@ -183,7 +177,7 @@ public class LibrarySimulator {
     }
 
     // Administrator menu
-    static void handleAdministratorMenu(Scanner input) {
+    static void handleAdministratorMenu() {
         clearScreen();
         displayAdminLogin();
         pause(PAUSE_MS);

@@ -12,11 +12,9 @@ public class Member {
     static public int TotalBorrows = 0;
     static public int TotalReturns = 0;
 
-
     // Constants
     static final double FEE_PER_BORROW = 0.50;
     static final int MAX_BORROW_PER_USER = 5;
-
 
     public Member(int id, String name, int borrowedCount) {
         this.id = id;
